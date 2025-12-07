@@ -1,0 +1,68 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}ATM{% endblock %}</title>
+    <style>
+        :root {
+            --bg: #0f172a;
+            --panel: #111827;
+            --accent: #22d3ee;
+            --muted: #94a3b8;
+            --text: #e2e8f0;
+            --danger: #f87171;
+        }
+        * { box-sizing: border-box; }
+        body { margin: 0; font-family: "Segoe UI", Tahoma, sans-serif; background: radial-gradient(circle at 20% 20%, #1e293b, var(--bg)); color: var(--text); min-height: 100vh; }
+        a { color: var(--accent); text-decoration: none; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 18px 24px; background: rgba(17, 24, 39, 0.8); border-bottom: 1px solid rgba(255,255,255,0.05); position: sticky; top: 0; backdrop-filter: blur(6px); }
+        .logo { font-weight: 700; letter-spacing: 0.5px; }
+        nav a { margin-left: 16px; }
+        .container { max-width: 1100px; margin: 24px auto 48px; padding: 0 20px; }
+        .card { background: var(--panel); border: 1px solid rgba(255,255,255,0.04); border-radius: 14px; padding: 20px; margin-bottom: 18px; box-shadow: 0 12px 30px rgba(0,0,0,0.25); }
+        .card h2 { margin-top: 0; margin-bottom: 8px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 14px; }
+        .btn { display: inline-block; padding: 10px 16px; border-radius: 10px; border: none; background: linear-gradient(135deg, #06b6d4, #14b8a6); color: #0b1120; font-weight: 700; cursor: pointer; transition: transform 0.1s ease, box-shadow 0.2s ease; }
+        .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 22px rgba(20, 184, 166, 0.25); }
+        form { margin: 0; }
+        input, select { width: 100%; padding: 10px 12px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.08); background: rgba(15, 23, 42, 0.6); color: var(--text); margin-bottom: 10px; }
+        label { display: block; margin: 6px 0 4px; color: var(--muted); font-size: 0.92rem; }
+        table { width: 100%; border-collapse: collapse; }
+        th, td { padding: 10px 8px; border-bottom: 1px solid rgba(255,255,255,0.05); text-align: left; }
+        th { color: var(--muted); font-weight: 600; }
+        .muted { color: var(--muted); font-size: 0.9rem; }
+        .messages { margin: 0 0 16px; list-style: none; padding: 0; }
+        .messages li { padding: 10px 12px; border-radius: 10px; margin-bottom: 8px; }
+        .messages .success { background: rgba(34, 211, 238, 0.14); border: 1px solid rgba(34, 211, 238, 0.4); }
+        .messages .error { background: rgba(248, 113, 113, 0.14); border: 1px solid rgba(248, 113, 113, 0.4); color: #fecdd3; }
+        @media (max-width: 640px) { header { flex-direction: column; align-items: flex-start; gap: 8px; } nav a { margin-left: 0; margin-right: 12px; } }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="logo">ATM Console</div>
+        <nav>
+            {% if user.is_authenticated %}
+                <span class="muted">Hi {{ user.username }}!</span>
+                <a href="{% url 'dashboard' %}">Dashboard</a>
+                <a href="{% url 'logout' %}">Logout</a>
+            {% else %}
+                <a href="{% url 'login' %}">Login</a>
+                <a href="{% url 'signup' %}">Sign up</a>
+            {% endif %}
+        </nav>
+    </header>
+    <div class="container">
+        {% if messages %}
+            <ul class="messages">
+                {% for message in messages %}
+                    <li class="{{ message.tags }}">{{ message }}</li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+        {% block content %}{% endblock %}
+    </div>
+</body>
+</html>
